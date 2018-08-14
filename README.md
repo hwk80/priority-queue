@@ -21,7 +21,7 @@ The UI also provides functionality to call the API directly.
 3. GET /orders to view all orders with their position in the queue and approximate wait time
 4. GET /orders/{idCust} to view a specific order with its position in the queue and approximate wait time
 5. GET /orders/next-delivery to view the list of orders for the next delivery
-6. DELETE the orders retrieved from the previous call to accept the delivery and remove it from the queue
+6. DELETE /orders/{idCusts} with the IDs of the orders retrieved from the previous call to accept the delivery and remove it from the queue
 
 ## More
 * open <http://localhost:8080/h2-console/> in your browser to access the H2 database tables that implement the queue.
