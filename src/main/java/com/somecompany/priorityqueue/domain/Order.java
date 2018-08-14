@@ -7,6 +7,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import org.springframework.data.domain.Persistable;
 
+/**
+ * Entity class for a single order in the priority queue.
+ * 
+ * @author hweitekamp
+ */
 @Entity
 @Table(name = "orders")
 public class Order implements Persistable, Serializable {

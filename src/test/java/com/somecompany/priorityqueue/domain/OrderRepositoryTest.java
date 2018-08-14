@@ -20,7 +20,7 @@ public class OrderRepositoryTest {
     private OrderRepository repository;
 
     @Test
-    public void whenFindById_thenReturnOrder() {
+    public void testFindById() {
         // given a new order
         Order testOrder = new Order();
         testOrder.setIdCust(12345);

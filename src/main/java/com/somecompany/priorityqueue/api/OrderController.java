@@ -22,6 +22,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+/**
+ * Controller for the REST interface to the priority queue.
+ * 
+ * @author hweitekamp
+ */
 @RestController
 public class OrderController {
 
@@ -66,12 +71,15 @@ public class OrderController {
         return orderService.getNextDelivery();
     }
 
-    @ExceptionHandler({NoSuchElementException.class, EmptyResultDataAccessException.class})
-    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No order found for this customer.")
+    @ExceptionHandler({NoSuchElementException.class,
+        EmptyResultDataAccessException.class})
+    @ResponseStatus(value = HttpStatus.NOT_FOUND,
+            reason = "No order found for this customer.")
     public void handleResourceNotFoundException() {
     }
 
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "An order is already queued for this customer.")
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST,
+            reason = "An order is already queued for this customer.")
     @ExceptionHandler(ConstraintViolationException.class)
     public void handleDuplicateKeyException() {
     }

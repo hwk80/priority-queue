@@ -58,12 +58,13 @@ public class OrderServiceImplTest {
         Mockito.when(orderRepository.findById(TEST_ID))
                 .thenReturn(Optional.of(testOrder));
 
-        Mockito.when(orderRepository.findAllByOrderByPriorityDescDatetimeAscIdCust(Mockito.any()))
+        Mockito.when(orderRepository
+                .findAllByOrderByPriorityDescDatetimeAscIdCust(Mockito.any()))
                 .thenReturn(Collections.singletonList(testOrder));
 
         Mockito.when(queuePositionCalculator.process(Mockito.any(List.class)))
                 .thenAnswer(//return same object
-                        (InvocationOnMock invocation) -> invocation.getArguments()[0]
+                        (InvocationOnMock mock) -> mock.getArguments()[0]
                 );
     }
     

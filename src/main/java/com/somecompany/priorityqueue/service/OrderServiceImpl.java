@@ -16,6 +16,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+/**
+ * Implementation of the service interface encapsulating the business logic.
+ * 
+ * @author hweitekamp
+ */
 @Service
 @Transactional
 public class OrderServiceImpl implements OrderService {
@@ -45,16 +50,17 @@ public class OrderServiceImpl implements OrderService {
             Order entity = repository.findById(idCust).get();
             repository.delete(entity);
         } catch (NoSuchElementException | EmptyResultDataAccessException e) {
-            LOG.warn("Could not delete. Order not found for customer " + idCust);
+            LOG.warn("Could not delete. Order not found for customer " 
+                    + idCust);
         }
     }
 
     @Override
-    public List<OrderDTO> getPageableOrdersSorted(int page, int size) {
-        final PageRequest pageRequest = PageRequest.of(page, size);
+    public List<OrderDTO> getPageableOrdersSorted(int pageNumber, int size) {
+        final PageRequest page = PageRequest.of(pageNumber, size);
 
         List<OrderDTO> orders = convertToDTO(
-                repository.findAllByOrderByPriorityDescDatetimeAscIdCust(pageRequest)
+                repository.findAllByOrderByPriorityDescDatetimeAscIdCust(page)
         );
 
         return queuePositionCalculator.process(orders);

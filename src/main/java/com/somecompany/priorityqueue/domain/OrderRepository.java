@@ -5,6 +5,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Repository providing access to the priority queue implementation.
+ * 
+ * @author hweitekamp
+ */
 @Repository
 public interface OrderRepository extends PagingAndSortingRepository<Order, Integer> {
 

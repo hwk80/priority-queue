@@ -5,6 +5,11 @@ import javax.validation.constraints.DecimalMax;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
 
+/**
+ * Data transfer object for the REST API.
+ * 
+ * @author hweitekamp
+ */
 public class OrderDTO {
 
     @Id

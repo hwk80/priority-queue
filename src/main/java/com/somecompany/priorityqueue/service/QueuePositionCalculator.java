@@ -4,6 +4,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for calculation of queue positions and approximate wait times.
+ * 
+ * @author hweitekamp
+ */
 @Service
 public class QueuePositionCalculator {
 
