@@ -3,7 +3,7 @@ package com.somecompany.priorityqueue.api;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.somecompany.priorityqueue.PriorityQueueApplication;
-import com.somecompany.priorityqueue.service.OrderDTO;
+import com.somecompany.priorityqueue.service.OrderResponseDTO;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class OrderControllerIntegrationTest {
 
     @Test
     public void testCreateAndDeleteOrder() throws Exception {
-        OrderDTO testOrder = new OrderDTO(TEST_ID, 10);
+        OrderResponseDTO testOrder = new OrderResponseDTO(TEST_ID, 10);
 
         mvc.perform(post("/orders/")
                 .contentType(MediaType.APPLICATION_JSON)

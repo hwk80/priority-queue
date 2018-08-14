@@ -70,7 +70,7 @@ public class OrderServiceImplTest {
     
     @Test
     public void testSave() {
-        orderService.save(new OrderDTO(TEST_ID, 10));
+        orderService.save(new OrderRequestDTO(TEST_ID, 10));
         
         verify(orderRepository, times(1))
                 .save(Mockito.any());
@@ -98,7 +98,7 @@ public class OrderServiceImplTest {
     
     @Test
     public void testGetPageableOrdersSorted() {
-        List<OrderDTO> result = orderService.getPageableOrdersSorted(0, 25);
+        List<OrderResponseDTO> result = orderService.getPageableOrdersSorted(0, 25);
         
         verify(orderRepository, times(1))
                 .findAllByOrderByPriorityDescDatetimeAscIdCust(Mockito.any());
@@ -111,7 +111,7 @@ public class OrderServiceImplTest {
     
     @Test
     public void testGetAllOrdersSorted() {
-        List<OrderDTO> result = orderService.getAllOrdersSorted();
+        List<OrderResponseDTO> result = orderService.getAllOrdersSorted();
         
         verify(orderRepository, times(1))
                 .findAllByOrderByPriorityDescDatetimeAscIdCust(Mockito.any());
@@ -124,7 +124,7 @@ public class OrderServiceImplTest {
 
     @Test
     public void testFindById() {
-        OrderDTO found = orderService.findById(TEST_ID);
+        OrderResponseDTO found = orderService.findById(TEST_ID);
 
         Assert.assertEquals(TEST_ID, found.getIdCust());
         verify(orderRepository, times(1))
@@ -141,7 +141,7 @@ public class OrderServiceImplTest {
     
     @Test
     public void testGetNextDelivery() {
-        List<OrderDTO> result = orderService.getNextDelivery();
+        List<OrderResponseDTO> result = orderService.getNextDelivery();
         
         verify(orderRepository, times(1))
                 .findAllByOrderByPriorityDescDatetimeAscIdCust(Mockito.any());

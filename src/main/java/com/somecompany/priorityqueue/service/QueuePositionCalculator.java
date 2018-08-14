@@ -17,12 +17,12 @@ public class QueuePositionCalculator {
     @Value("${orderqueue.delivery_period_minutes}")
     private int deliveryPeriod;
 
-    public List<OrderDTO> process(List<OrderDTO> orderDtos) {
+    public List<OrderResponseDTO> process(List<OrderResponseDTO> orderDtos) {
         int currentDeliverySize = 0;
         int deliveryNumber = 0;
         int positionInQueue = 0;
 
-        for (OrderDTO o : orderDtos) {
+        for (OrderResponseDTO o : orderDtos) {
             currentDeliverySize += o.getQuantity();
             if (currentDeliverySize > maxDeliverySize) {
                 currentDeliverySize = 0;

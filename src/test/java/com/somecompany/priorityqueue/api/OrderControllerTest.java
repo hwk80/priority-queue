@@ -2,8 +2,9 @@ package com.somecompany.priorityqueue.api;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.somecompany.priorityqueue.service.OrderRequestDTO;
 import java.util.List;
-import com.somecompany.priorityqueue.service.OrderDTO;
+import com.somecompany.priorityqueue.service.OrderResponseDTO;
 import com.somecompany.priorityqueue.service.OrderService;
 import java.util.Arrays;
 import java.util.NoSuchElementException;
@@ -21,7 +22,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -41,10 +41,10 @@ public class OrderControllerTest {
 
     @Test
     public void testGetOrders() throws Exception {
-        OrderDTO testOrder = new OrderDTO(TEST_ID, 10);
-        OrderDTO testOrder2 = new OrderDTO(TEST_ID + 1, 25);
+        OrderResponseDTO testOrder = new OrderResponseDTO(TEST_ID, 10);
+        OrderResponseDTO testOrder2 = new OrderResponseDTO(TEST_ID + 1, 25);
 
-        List<OrderDTO> allOrders = Arrays.asList(testOrder, testOrder2);
+        List<OrderResponseDTO> allOrders = Arrays.asList(testOrder, testOrder2);
 
         given(service.getAllOrdersSorted()).willReturn(allOrders);
 
@@ -56,7 +56,7 @@ public class OrderControllerTest {
 
     @Test
     public void testGetSpecificOrder() throws Exception {
-        OrderDTO testOrder = new OrderDTO(TEST_ID, 10);
+        OrderResponseDTO testOrder = new OrderResponseDTO(TEST_ID, 10);
 
         given(service.findById(TEST_ID)).willReturn(testOrder);
 
@@ -84,9 +84,7 @@ public class OrderControllerTest {
 
     @Test
     public void testCreateOrder() throws Exception {
-        OrderDTO testOrder = new OrderDTO(TEST_ID, 10);
-
-        given(service.save(any())).willReturn(testOrder);
+        OrderRequestDTO testOrder = new OrderRequestDTO(TEST_ID, 10);
 
         mvc.perform(post("/orders/")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,7 +1,9 @@
 package com.somecompany.priorityqueue.api;
 
-import com.somecompany.priorityqueue.service.OrderDTO;
+import com.somecompany.priorityqueue.service.OrderRequestDTO;
+import com.somecompany.priorityqueue.service.OrderResponseDTO;
 import com.somecompany.priorityqueue.service.OrderService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -31,6 +33,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  * @author hweitekamp
  */
 @RestController
+@Api(description = "Operations on the Rubber Duck Order Queue")
 public class OrderController {
 
     @Autowired
@@ -42,8 +45,8 @@ public class OrderController {
         @ApiResponse(code = 201, message = "Successfully inserted order."),
         @ApiResponse(code = 400, message = "An order is already queued for this customer.")
     })
-    public ResponseEntity<Object> createOrder(@Valid @RequestBody OrderDTO order) {
-        order = orderService.save(order);
+    public ResponseEntity<Object> createOrder(@Valid @RequestBody OrderRequestDTO order) {
+        orderService.save(order);
 
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/" + order.getIdCust())
@@ -54,7 +57,8 @@ public class OrderController {
 
     @DeleteMapping("/orders/{idCusts}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "Delete an order from the queue.")
+    @ApiOperation(value = "Delete one or several orders from the queue.", 
+            notes="Use a comma separated list for multiple ids.")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Successfully deleted the order.")})
     public void deleteOrder(@PathVariable List<Integer> idCusts) {
@@ -64,10 +68,10 @@ public class OrderController {
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    @ApiOperation(value = "View a list of orders with queue position and approximate wait time.", response = Iterable.class)
+    @ApiOperation(value = "View a list of orders with queue position and approximate wait time.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Successfully retrieved list.")})
-    public List<OrderDTO> findAll() {
+    public List<OrderResponseDTO> findAll() {
         return orderService.getAllOrdersSorted();
     }
 
@@ -78,17 +82,17 @@ public class OrderController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Successfully retrieved order."),
         @ApiResponse(code = 404, message = "No order found for the specified customer.")})
-    public OrderDTO findById(@PathVariable int idCust) {
+    public OrderResponseDTO findById(@PathVariable int idCust) {
         return orderService.findById(idCust);
     }
 
     @GetMapping("/orders/nextDelivery")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    @ApiOperation(value = "Retrieve a list of orders for the next delivery.", response = Iterable.class)
+    @ApiOperation(value = "Retrieve a list of orders for the next delivery.")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Successfully retrieved list.")})
-    public List<OrderDTO> getNextDelivery() {
+    public List<OrderResponseDTO> getNextDelivery() {
         return orderService.getNextDelivery();
     }
 

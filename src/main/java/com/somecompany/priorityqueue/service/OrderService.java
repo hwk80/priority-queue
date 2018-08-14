@@ -14,9 +14,8 @@ public interface OrderService {
      * Place a single Order in the priority queue.
      *
      * @param order
-     * @return the saved order
      */
-    public OrderDTO save(OrderDTO order);
+    public void save(OrderRequestDTO order);
 
     /**
      * Delete a single Order from the queue.
@@ -32,14 +31,14 @@ public interface OrderService {
      * @param pageSize
      * @return
      */
-    public List<OrderDTO> getPageableOrdersSorted(int pageNumber, int pageSize);
+    public List<OrderResponseDTO> getPageableOrdersSorted(int pageNumber, int pageSize);
 
     /**
      * Get a list of all orders in the queue.
      *
      * @return
      */
-    public List<OrderDTO> getAllOrdersSorted();
+    public List<OrderResponseDTO> getAllOrdersSorted();
 
     /**
      * Get a single order from the queue for a specified customer.
@@ -49,13 +48,13 @@ public interface OrderService {
      * the queue.
      * @return The found order with queue position and wait time.
      */
-    public OrderDTO findById(int idCust);
+    public OrderResponseDTO findById(int idCust);
 
     /**
      * Get the orders for the next delivery.
      *
      * @return The list of orders for the next delivery.
      */
-    public List<OrderDTO> getNextDelivery();
+    public List<OrderResponseDTO> getNextDelivery();
 
 }

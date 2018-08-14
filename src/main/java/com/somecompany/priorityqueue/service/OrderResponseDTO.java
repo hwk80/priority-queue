@@ -1,34 +1,21 @@
 package com.somecompany.priorityqueue.service;
 
-import javax.persistence.Id;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
-
 /**
- * Data transfer object for the REST API.
- * 
+ * Data transfer object for REST API responses.
+ *
  * @author hweitekamp
  */
-public class OrderDTO {
+public class OrderResponseDTO {
 
-    @Id
-    @DecimalMin(value = "1", message = "Invalid customer id. Minimum value is 1.")
-    @DecimalMax(value = "20000", message = "Invalid customer id. Maximum value is 20000.")
     private int idCust;
-
-    @NotNull
-    @DecimalMin(value = "1", message = "Invalid quantity. Minimum value is 1.")
-    @DecimalMax(value = "25", message = "Invalid quantity. Maximum value is 25.")
     private int quantity;
-
     private int positionInQueue;
     private int approximateWaitTimeMinutes;
 
-    public OrderDTO() {
+    public OrderResponseDTO() {
     }
 
-    public OrderDTO(int idCust, int quantity) {
+    public OrderResponseDTO(int idCust, int quantity) {
         this.idCust = idCust;
         this.quantity = quantity;
     }

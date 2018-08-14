@@ -38,10 +38,8 @@ public class OrderServiceImpl implements OrderService {
     private int maxPrioritizedIdCust;
 
     @Override
-    public OrderDTO save(OrderDTO orderDto) {
+    public void save(OrderRequestDTO orderDto) {
         repository.save(convertToOrder(orderDto));
-
-        return orderDto;
     }
 
     @Override
@@ -56,10 +54,10 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getPageableOrdersSorted(int pageNumber, int size) {
+    public List<OrderResponseDTO> getPageableOrdersSorted(int pageNumber, int size) {
         final PageRequest page = PageRequest.of(pageNumber, size);
 
-        List<OrderDTO> orders = convertToDTO(
+        List<OrderResponseDTO> orders = convertToDTO(
                 repository.findAllByOrderByPriorityDescDatetimeAscIdCust(page)
         );
 
@@ -67,12 +65,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getAllOrdersSorted() {
+    public List<OrderResponseDTO> getAllOrdersSorted() {
         return getPageableOrdersSorted(0, Integer.MAX_VALUE);
     }
 
     @Override
-    public OrderDTO findById(int idCust) {
+    public OrderResponseDTO findById(int idCust) {
         return getAllOrdersSorted().stream()
                 .filter(o -> idCust == (o.getIdCust()))
                 .findAny()
@@ -80,8 +78,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderDTO> getNextDelivery() {
-        final List<OrderDTO> orders = new ArrayList<>();
+    public List<OrderResponseDTO> getNextDelivery() {
+        final List<OrderResponseDTO> orders = new ArrayList<>();
         final AtomicInteger deliverySize = new AtomicInteger();
 
         getPageableOrdersSorted(0, maxDeliverySize).forEach(o -> {
@@ -94,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
         return orders;
     }
 
-    private Order convertToOrder(OrderDTO dto) {
+    private Order convertToOrder(OrderRequestDTO dto) {
         Order order = new Order();
         order.setIdCust(dto.getIdCust());
         order.setQuantity(dto.getQuantity());
@@ -104,14 +102,14 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
-    private List<OrderDTO> convertToDTO(List<Order> orders) {
+    private List<OrderResponseDTO> convertToDTO(List<Order> orders) {
         return orders.stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
     }
 
-    private OrderDTO convertToDTO(Order order) {
-        return new OrderDTO(order.getIdCust(), order.getQuantity());
+    private OrderResponseDTO convertToDTO(Order order) {
+        return new OrderResponseDTO(order.getIdCust(), order.getQuantity());
     }
 
 }
