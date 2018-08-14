@@ -1,0 +1,31 @@
+#/bin/bash
+## requires curl and jq
+
+echo --- check queue: empty
+curl -sX GET "http://localhost:8080/orders" -H "accept: application/json" | jq .
+
+echo --- insert some orders
+curl -sX POST "http://localhost:8080/orders" -H "Content-Type: application/json" -d "{ \"idCust\": 1000, \"quantity\": 25}"
+curl -sX POST "http://localhost:8080/orders" -H "Content-Type: application/json" -d "{ \"idCust\": 1, \"quantity\": 1}"
+curl -sX POST "http://localhost:8080/orders" -H "Content-Type: application/json" -d "{ \"idCust\": 5000, \"quantity\": 13}"
+curl -sX POST "http://localhost:8080/orders" -H "Content-Type: application/json" -d "{ \"idCust\": 2, \"quantity\": 10}"
+curl -sX POST "http://localhost:8080/orders" -H "Content-Type: application/json" -d "{ \"idCust\": 20000, \"quantity\": 25}"
+curl -sX POST "http://localhost:8080/orders" -H "Content-Type: application/json" -d "{ \"idCust\": 123, \"quantity\": 12}"
+curl -sX POST "http://localhost:8080/orders" -H "Content-Type: application/json" -d "{ \"idCust\": 5, \"quantity\": 5}"
+
+echo --- check queue: 7 orders
+curl -sX GET "http://localhost:8080/orders" -H "accept: application/json" | jq .
+
+echo --- check order for customer with id 5
+curl -sX GET "http://localhost:8080/orders/5" -H "accept: application/json" | jq .
+
+echo "--- retrieve orders for next delivery (three items in this case)"
+curl -sX GET "http://localhost:8080/orders/next-delivery" -H "accept: application/json" | jq .
+
+echo --- acknowledge delivery by deleting the three orders
+curl -sX DELETE "http://localhost:8080/orders/1,2,123" -H "accept: application/json"
+
+echo --- retrieve orders for next delivery
+curl -sX GET "http://localhost:8080/orders/next-delivery" -H "accept: application/json" | jq .
+
+## and so on...

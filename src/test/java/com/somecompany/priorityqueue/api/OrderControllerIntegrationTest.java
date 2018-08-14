@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -27,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         webEnvironment = SpringBootTest.WebEnvironment.MOCK,
         classes = PriorityQueueApplication.class)
 @AutoConfigureMockMvc
+@Sql(scripts = "classpath:testdata.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 public class OrderControllerIntegrationTest {
 
     private static final int TEST_ID = 12345;
@@ -86,7 +88,7 @@ public class OrderControllerIntegrationTest {
 
     @Test
     public void testGetNextDelivery() throws Exception {
-        mvc.perform(get("/orders/nextDelivery"))
+        mvc.perform(get("/orders/next-delivery"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(4)))
                 .andExpect(jsonPath("$[0].idCust", is(2)));

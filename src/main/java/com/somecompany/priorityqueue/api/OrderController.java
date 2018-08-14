@@ -33,13 +33,13 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
  * @author hweitekamp
  */
 @RestController
-@Api(description = "Operations on the Rubber Duck Order Queue")
+@Api(consumes = "application/json", description = "Operations on the Rubber Duck Order Queue")
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
 
-    @PostMapping("/orders")
+    @PostMapping(value = "/orders", produces = "application/json")
     @ApiOperation(value = "Insert a new order into the queue. Only one order per customer can be in the queue at any time.")
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Successfully inserted order."),
@@ -55,17 +55,17 @@ public class OrderController {
         return ResponseEntity.created(location).build();
     }
 
-    @DeleteMapping("/orders/{idCusts}")
+    @DeleteMapping(value = "/orders/{idCusts}", produces = "application/json")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @ApiOperation(value = "Delete one or several orders from the queue.", 
-            notes="Use a comma separated list for multiple ids.")
+    @ApiOperation(value = "Delete one or several orders from the queue.",
+            notes = "Use a comma separated list for multiple ids.")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Successfully deleted the order.")})
     public void deleteOrder(@PathVariable List<Integer> idCusts) {
         idCusts.forEach(orderService::deleteById);
     }
 
-    @GetMapping("/orders")
+    @GetMapping(value = "/orders", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ApiOperation(value = "View a list of orders with queue position and approximate wait time.")
@@ -75,7 +75,7 @@ public class OrderController {
         return orderService.getAllOrdersSorted();
     }
 
-    @GetMapping("/orders/{idCust}")
+    @GetMapping(value = "/orders/{idCust}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ApiOperation(value = "View an order with queue position and approximate wait time.")
@@ -86,7 +86,7 @@ public class OrderController {
         return orderService.findById(idCust);
     }
 
-    @GetMapping("/orders/nextDelivery")
+    @GetMapping(value = "/orders/next-delivery", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     @ApiOperation(value = "Retrieve a list of orders for the next delivery.")
@@ -96,15 +96,12 @@ public class OrderController {
         return orderService.getNextDelivery();
     }
 
-    @ExceptionHandler({NoSuchElementException.class,
-        EmptyResultDataAccessException.class})
-    @ResponseStatus(value = HttpStatus.NOT_FOUND,
-            reason = "No order found for this customer.")
+    @ExceptionHandler({NoSuchElementException.class, EmptyResultDataAccessException.class})
+    @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "No order found for this customer.")
     public void handleResourceNotFoundException() {
     }
 
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST,
-            reason = "An order is already queued for this customer.")
+    @ResponseStatus(value = HttpStatus.BAD_REQUEST, reason = "An order is already queued for this customer.")
     @ExceptionHandler(ConstraintViolationException.class)
     public void handleDuplicateKeyException() {
     }
