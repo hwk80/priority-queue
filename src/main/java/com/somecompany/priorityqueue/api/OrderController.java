@@ -2,6 +2,9 @@ package com.somecompany.priorityqueue.api;
 
 import com.somecompany.priorityqueue.service.OrderDTO;
 import com.somecompany.priorityqueue.service.OrderService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import java.net.URI;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -24,7 +27,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 /**
  * Controller for the REST interface to the priority queue.
- * 
+ *
  * @author hweitekamp
  */
 @RestController
@@ -34,6 +37,11 @@ public class OrderController {
     private OrderService orderService;
 
     @PostMapping("/orders")
+    @ApiOperation(value = "Insert a new order into the queue. Only one order per customer can be in the queue at any time.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Successfully inserted order."),
+        @ApiResponse(code = 400, message = "An order is already queued for this customer.")
+    })
     public ResponseEntity<Object> createOrder(@Valid @RequestBody OrderDTO order) {
         order = orderService.save(order);
 
@@ -46,6 +54,9 @@ public class OrderController {
 
     @DeleteMapping("/orders/{idCusts}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ApiOperation(value = "Delete an order from the queue.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Successfully deleted the order.")})
     public void deleteOrder(@PathVariable List<Integer> idCusts) {
         idCusts.forEach(orderService::deleteById);
     }
@@ -53,6 +64,9 @@ public class OrderController {
     @GetMapping("/orders")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
+    @ApiOperation(value = "View a list of orders with queue position and approximate wait time.", response = Iterable.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Successfully retrieved list.")})
     public List<OrderDTO> findAll() {
         return orderService.getAllOrdersSorted();
     }
@@ -60,6 +74,10 @@ public class OrderController {
     @GetMapping("/orders/{idCust}")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
+    @ApiOperation(value = "View an order with queue position and approximate wait time.")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Successfully retrieved order."),
+        @ApiResponse(code = 404, message = "No order found for the specified customer.")})
     public OrderDTO findById(@PathVariable int idCust) {
         return orderService.findById(idCust);
     }
@@ -67,6 +85,9 @@ public class OrderController {
     @GetMapping("/orders/nextDelivery")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
+    @ApiOperation(value = "Retrieve a list of orders for the next delivery.", response = Iterable.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Successfully retrieved list.")})
     public List<OrderDTO> getNextDelivery() {
         return orderService.getNextDelivery();
     }
